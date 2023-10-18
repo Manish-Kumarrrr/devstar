@@ -3,6 +3,9 @@
   import { onMount } from 'svelte';
   import { selectedTool } from './toolstore'; // Adjust the path to your store file
 
+  /**
+	 * @type {Element | null}
+	 */
   let canvas;
   let context;
   let isDrawing = false;
@@ -360,8 +363,7 @@
     context.font = '14px Arial';
     context.fillStyle = 'black';
     context.fillText(text, x, y);
-  }
-
+  };
 </script>
 
 <div class="drawing-area">
