@@ -11,10 +11,12 @@
   let editText = '';
   let shapes = [];
   let startX, startY, endX, endY;
+  let canvasPosition = { top: 0, left: 0 };
 
   onMount(() => {
     canvas = document.querySelector('.drawing-area canvas');
     context = canvas.getContext('2d');
+    updateCanvasPosition(); 
 
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mousemove', handleMouseMove);
@@ -31,6 +33,14 @@
       startX = event.clientX - canvas.getBoundingClientRect().left;
       startY = event.clientY - canvas.getBoundingClientRect().top;
     }
+  }
+
+  function updateCanvasPosition() {
+    const canvasRect = canvas.getBoundingClientRect();
+    canvasPosition = {
+      top: canvasRect.top,
+      left: canvasRect.left,
+    };
   }
 
   function handleMouseMove(event) {
@@ -145,13 +155,6 @@
       break;
     default:
       console.error('Invalid tool selected');
-    }
-  }
-
-  function handleTextBlur() {
-    if (textEditing) {
-      addText(startX, startY, editText);
-      textEditing = false;
     }
   }
 
@@ -352,6 +355,12 @@
       handleTextBlur();
     }
   }
+  function handleTextBlur() {
+    if (textEditing) {
+      addText(startX, startY, editText);
+      textEditing = false;
+    }
+  }
   function drawText(x, y, text) {
     context.font = '14px Arial';
     context.fillStyle = 'black';
@@ -360,13 +369,10 @@
   window.addEventListener('export-request', exportCanvas);
   function exportCanvas() {
     const url = canvas.toDataURL('image/png');
-
-    // Create an anchor element to trigger the download
     const link = document.createElement('a');
     link.href = url;
     link.download = 'flowchart.png';
 
-    // Programmatically trigger a click event on the link
     const clickEvent = new MouseEvent('click', {
       view: window,
       bubbles: false,
@@ -384,7 +390,7 @@
   <input
     type="text"
     bind:value={tempText}
-    style="position: absolute; left: {startX}px; top: {startY}px; z-index: 2; outline: none;"
+    style="position: absolute; left: {canvasPosition.left+startX}px; top: {canvasPosition.top+startY}px; z-index: 2; outline: none;"
     on:blur={handleTextBlur}
     on:keydown={handleTextKeyDown}
   />
