@@ -1,12 +1,15 @@
 <script lang="ts">
   import Intro from '$lib/Intro.svelte';
   import FlowchartArea from './flowchartarea.svelte';
-  import { selectedTool } from './toolstore';
+  import { selectedTool, selectedColor } from './toolstore';
 
   export let data;
 
   function setTool(tool) {
     selectedTool.set(tool);
+  }
+  function updateColor(event) {
+    selectedColor.set(event.target.value);
   }
 
   const exportFlow = () => {
@@ -38,12 +41,14 @@
       <button on:click={() => setTool('pencil')}>Pencil</button><br>
       <button>Colors</button><br>
       <section class="color">
-        <input name="colour" class="bg-red-700" value="red" type="radio">
+        <!-- <input name="colour" class="bg-red-700" value="red" type="radio">
         <input name="colour" class="bg-blue-700" value="blue" type="radio">
         <input name="colour" class="bg-green-700" value="green" type="radio">
         <input name="colour" class="bg-black" value="black" type="radio">
         <input name="colour" class="bg-yellow-200" value="yellow" type="radio">
-        <input name="colour" class="bg-white-200" value="white" type="radio">
+        <input name="colour" class="bg-white-200" value="white" type="radio"> -->
+        <label for="selectedcolor">Select color:</label>
+        <input type="color" id="selectedcolor" name="selectedcolor" bind:value={$selectedColor} on:input={updateColor}>
       </section>
     </div>
     <div class=" py-1">
